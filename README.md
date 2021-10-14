@@ -1,5 +1,7 @@
 # Multipart-object
 
+library to convert a classic object to a nested object, for send nested data in multipart http request
+
 ## Installation
 
 ```bash
