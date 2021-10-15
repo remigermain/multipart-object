@@ -1,4 +1,6 @@
 # Multipart-object
+[![CI](https://github.com/remigermain/multipart-object/actions/workflows/node.js.yml/badge.svg)](https://github.com/remigermain/multipart-object/actions/workflows/node.js.yml)
+[![build](https://img.shields.io/npm/v/multipart-object)](https://www.npmjs.com/package/multipart-object)
 
 library to convert a classic object to a nested object, for send nested data in multipart http request
 
@@ -10,10 +12,8 @@ yarn add multipart-object
 # npm
 npm install multipart-object
 ```
-
-## cdn
-
 ```html
+# cnd
  <script src="https://unpkg.com/multipart-object/dist/index.js">
 ```
 
@@ -54,7 +54,8 @@ const nestedData = toNestedObject(data)
 }
 ```
 
-## lib for parser in backend
+## Backend
 
-If your project are mande in python, you cna use this lib
+If your project are mande in python, you can use this lib
 [nested_multipart_parser](https://github.com/remigermain/nested_multipart_parser/)
+a lib for nodejs come soon
