@@ -21,9 +21,10 @@
   ],
   "scripts": {
     "build": "cross-env NODE_ENV=production npx rollup -c rollup.config.js",
+    "build:dev": "cross-env NODE_ENV=dev DEBUG=1 npx rollup -c rollup.config.js",
     "lint": "eslint --ext \".js,.vue\" --ignore-path .gitignore src/*",
     "lint:fix": "eslint --ext \".js,.vue\" --fix --ignore-path .gitignore src/*",
-    "clean": "rm -rf dist *.html node_modules/.cache",
+    "clean": "rm -rf dist *.html node_modules/.cache yarn-error.log",
     "fclean": "yarn clean && rm -rf node_modules",
     "test": "jest"
   },
@@ -42,6 +43,7 @@
     "@types/jest": "^27.0.2",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
+    "blob-polyfill": "^6.0.20211015",
     "core-js": "3",
     "cross-env": "^7.0.2",
     "eslint": "^8.0.1",
