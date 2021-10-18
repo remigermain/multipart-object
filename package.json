@@ -9,15 +9,12 @@
     "url": "https://github.com/remigermain/multipart-object/issues"
   },
   "homepage": "https://github.com/remigermain/multipart-object#readme",
-  "main": "index.ts",
-  "module": "src/index.ts",
-  "exports": {
-    "require": "./src/index.ts",
-    "import": "./dist/index.js"
-  },
+  "main": "dist/index.js",
+  "typings": "dist/types/index.d.ts",
   "files": [
-    "src/index.ts",
-    "dist/index.js"
+    "src",
+    "dist",
+    "types"
   ],
   "scripts": {
     "build": "cross-env NODE_ENV=production npx rollup -c rollup.config.js",
