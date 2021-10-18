@@ -25,7 +25,7 @@ npm install multipart-object
 ### How is work
 ```js
 //es module
-import { toObject, toFormData } from "multipart-object"
+import nestedMultiPart from "multipart-object"
 // with cdn
 const toObject = windows.nestedMultiPart.toObject
 const toFormData = windows.nestedMultiPart.toFormData
@@ -48,7 +48,7 @@ const data = {
     }
 }
 
-const nestedData = nestedMultiPart(data)
+const nestedData = nestedMultiPart.toObject(data)
 // output
 {
   "key": 'value',
@@ -61,7 +61,7 @@ const nestedData = nestedMultiPart(data)
   'what[nice]': 'library'
 }
 // you have to nestedMultiPartForm is return FormData with nested formated
-const nestedData = nestedMultiPartForm(data)
+const nestedData = nestedMultiPart.toFormData(data)
 
 ```
 
@@ -186,14 +186,14 @@ For this working perfectly you need to follow this rules:
 
 ## How to use it
 ```js
-import { nestedMultiPart } from 'multipart-object'
+import { NestedParser } from 'multipart-object'
 
 // options is optional
 const options = {
     separator: "dot"
 }
 
-const parser = new nestedMultiPart(data, options)
+const parser = new NestedParser(data, options)
 if (parser.isValid()) {
     const validateData = parser.validateData
 
