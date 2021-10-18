@@ -8,7 +8,7 @@
   "bugs": {
     "url": "https://github.com/remigermain/multipart-object/issues"
   },
-  "homepage": "https://github.com/remigermain/multipart-objectw#readme",
+  "homepage": "https://github.com/remigermain/multipart-object#readme",
   "main": "index.ts",
   "module": "src/index.ts",
   "exports": {
