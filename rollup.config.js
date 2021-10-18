@@ -3,10 +3,10 @@ import { terser } from "rollup-plugin-terser";
 import typescript from '@rollup/plugin-typescript';
 
 const options = {
-  input: "src/index.ts",
+  input: "src/nestedMultiPart.ts",
   output: {
     dir: "dist",
-    name: "toNestedObject",
+    name: "nestedMultiPart",
     format: "umd",
   },
   plugins: [

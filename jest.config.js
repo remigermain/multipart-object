@@ -9,6 +9,10 @@ module.exports = {
   transform: {
     '^.+\\.js$': 'babel-jest',
   },
+
+  setupFiles: [
+    "./test/mock.ts"
+  ],
   // for convert import to locale directory
   moduleNameMapper: {
     "^~(.*)$": "<rootDir>/$1",

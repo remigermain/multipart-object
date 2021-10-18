@@ -1,2 +1,2 @@
-export declare function nestedMultiPart(data: object, options?: NestedObjectOptions): NestedMultiPartData;
-export declare function nestedMultiPartForm(data: object, options?: NestedObjectOptions): FormData;
+export declare function toObject(data: object, options?: NestedDataOptions): NestedMultiPartData;
+export declare function toFormData(data: object, options?: NestedDataOptions): FormData;

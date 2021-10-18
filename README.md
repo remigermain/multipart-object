@@ -2,7 +2,8 @@
 [![CI](https://github.com/remigermain/multipart-object/actions/workflows/node.js.yml/badge.svg)](https://github.com/remigermain/multipart-object/actions/workflows/node.js.yml)
 [![build](https://img.shields.io/npm/v/multipart-object)](https://www.npmjs.com/package/multipart-object)
 
-library to convert a classic object to a nested object, for send nested data in multipart http request
+library to convert a classic object to a nested object, for send nested data in multipart http request.
+A parser for nodejs is provided.
 
 ## Installation
 
@@ -13,15 +14,22 @@ yarn add multipart-object
 npm install multipart-object
 ```
 ```html
-# cnd
- <script src="https://unpkg.com/multipart-object/dist/index.js">
+# cnd for nestedMultiPart function
+ <script src="https://unpkg.com/multipart-object/dist/nestedMultiPart.js" defer></script>
 ```
 
-## How is work
 
+
+# Convert data to nestedMultiPart
+
+### How is work
 ```js
 //es module
-import toNestedObject from "multipart-object"
+import { toObject, toFormData } from "multipart-object"
+// with cdn
+const toObject = windows.nestedMultiPart.toObject
+const toFormData = windows.nestedMultiPart.toFormData
+
 
 const data = {
     key: "value",
@@ -40,7 +48,7 @@ const data = {
     }
 }
 
-const nestedData = toNestedObject(data)
+const nestedData = nestedMultiPart(data)
 // output
 {
   "key": 'value',
@@ -52,10 +60,183 @@ const nestedData = toNestedObject(data)
   'array[4][anotherkey2]': 'value2',
   'what[nice]': 'library'
 }
+// you have to nestedMultiPartForm is return FormData with nested formated
+const nestedData = nestedMultiPartForm(data)
+
 ```
 
-## Backend
+### Options
+```js
+const options = {
+	//the separator
+	//with bracket:  article[title][authors][0]: "jhon doe"
+	//with dot:      article.title.authors.0: "jhon doe"
+	separator: 'bracket' or 'dot', // default is bracket
+}
 
+nestedMultiPart(data, options)
+```
+
+# Parser for multipart nested
 If your project are mande in python, you can use this lib
 [nested_multipart_parser](https://github.com/remigermain/nested-multipart-parser)
-a lib for nodejs come soon
+
+A parser made for nodeJs
+
+For this working perfectly you need to follow this rules:
+
+- a first key need to be set ex: `title[0]` or `title`, in both the first key is `title`
+- each sub key need to be seperate by brackets `[ ]` or dot `.` (depends of your options)
+- if sub key are a full number, is converted to list *ex:* `[0]` or `[42]`
+- if sub key is Not a number is converted to dictionary *ex:* `[username]` or `[article]`
+- no space between separator
+- by default,the duplicate keys can't be set (see options to override that)
+  ex:
+
+```python
+	data = {
+		'title[0]': 'my-value'``
+	}
+	# output
+	output = {
+		'title': [
+			'my-value'
+		]
+	}
+
+	# invalid key
+	data = {
+		'title[688]': 'my-value'
+	}
+	# ERROR , you set a number is upper thans actual list
+
+
+	# wrong format if separator is brackets (see options)
+	data = {
+		'title[0]]]': 'my-value',
+		'title[0': 'my-value',
+		'title[': 'my-value',
+		'title[]': 'my-value',
+		'[]': 'my-value',
+	}
+
+	data = {
+		'title': 42,
+		'title[object]': 42
+	}
+	# Error , title as alerady set by primitive value (int, boolean or string)
+
+	# many element in list
+	data = {
+		'title[0]': 'my-value',
+		'title[1]': 'my-second-value'
+	}
+	# output
+	output = {
+		'title': [
+			'my-value',
+			'my-second-value'
+		]
+	}
+
+	# converted to object
+	data = {
+		'title[key0]': 'my-value',
+		'title[key7]': 'my-second-value'
+	}
+	# output
+	output = {
+		'title': {
+			'key0': 'my-value',
+			'key7': 'my-second-value'
+		}
+	}
+
+	# you have no limit for chained key
+	data = {
+		'the[0][chained][key][0][are][awesome][0][0]': 'im here !!'
+	}
+	# with "dot" separator in options is look like that
+	data = {
+		'the.0.chained.key.0.are.awesome.0.0': 'im here !!'
+	}
+
+	# the output
+	output: {
+		'the': [
+			{
+				'chained':{
+					'key': [
+						{
+							'are': {
+								'awesome':
+								[
+									[
+										'im here !!'
+									]
+								]
+							}
+						}
+					]
+				}
+			}
+		]
+	}
+```
+
+## How to use it
+```js
+import { nestedMultiPart } from 'multipart-object'
+
+// options is optional
+const options = {
+    separator: "dot"
+}
+
+const parser = new nestedMultiPart(data, options)
+if (parser.isValid()) {
+    const validateData = parser.validateData
+
+} else {
+    console.error(parser.errors)
+}
+```
+
+## Options
+
+```js
+const options = {
+	// the separator
+	// with bracket:  article[title][authors][0]: "jhon doe"
+	// with dot:      article.title.authors.0: "jhon doe"
+	separator: 'bracket' /* or */ 'dot', // default is bracket
+
+
+    /*
+    raise a expections when you have duplicate keys
+	    ex :
+	    {
+		    "article": 42,
+	    	"article[title]": 42,
+	    } 
+    */
+	throwDuplicate: true,
+
+	/*
+    overide the duplicate keys, you need to set "raise_duplicate" to False
+	 ex :
+	 {
+		"article": 42,
+		"article[title]": 42,
+	 }
+	 the out is
+	 ex :
+	 {
+		"article"{
+	 		"title": 42,
+		}
+	 }
+     */
+	assignDuplicate: false
+}
+```

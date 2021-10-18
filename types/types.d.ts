@@ -6,16 +6,22 @@
 
 type Separator = "dot" | "bracket"
 
-interface NestedObjectOptions {
+interface NestedDataOptions {
     separator?: Separator,
 }
 
-interface ParserOptions {
-    raise_duplicate?: boolean,
-    assign_duplicate?: boolean,
+interface NestedParserOptions extends NestedDataOptions {
+    throwDuplicate?: boolean,
+    assignDuplicate?: boolean,
 }
 
+interface MemoryNested {
+    tmp: any[] | {[key: string]: any} | object ,
+    key: string | number,
+    type: any[] | {[key: string]: any} | null
+}
 
+type NestedElement = {[key: string]: any} | [[index: number]]
 /*
     type for nested form
 */
@@ -23,3 +29,13 @@ interface ParserOptions {
 interface NestedMultiPartData {
     [key: string]: string | boolean | number | Blob | File
 }
+
+interface ObjectDepth{
+    [key: string]: any
+}
+
+interface ArrayDepth{
+    [key: number]: any
+}
+
+type NestedDepth = ArrayDepth | ObjectDepth

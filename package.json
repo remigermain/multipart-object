@@ -1,7 +1,7 @@
 {
   "name": "multipart-object",
   "version": "0.1.0",
-  "description": "convert objects to nested objects",
+  "description": "convert multipart data to nested data",
   "repository": "git@github.com:remigermain/multipart-object.git",
   "author": "rgermain <contact@germainremi.fr>",
   "license": "MIT",
@@ -30,6 +30,8 @@
   },
   "keywords": [
     "multipart",
+    "content-type",
+    "multipart/form-data",
     "urlencode",
     "nested",
     "parser"
@@ -43,7 +45,6 @@
     "@types/jest": "^27.0.2",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
-    "blob-polyfill": "^6.0.20211015",
     "core-js": "3",
     "cross-env": "^7.0.2",
     "eslint": "^8.0.1",

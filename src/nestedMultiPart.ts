@@ -1,26 +1,23 @@
-import { defaultOptions } from "./utils"
 
-
-// @ts-ignore
-// import { Blob } from "blob-polyfill"
+const defaultOptions: NestedDataOptions = {
+    separator: "bracket"
+}
 
 /*
     @data your objects data
     @options the options for generate data
 
 */
-export function nestedMultiPart(data: object, options: NestedObjectOptions = defaultOptions): NestedMultiPartData {
+export function toObject(data: object, options: NestedDataOptions = defaultOptions): NestedMultiPartData {
     const nestedData: NestedMultiPartData = {}
     options = { ...defaultOptions, ...options }
+	const isDot = options?.separator == "dot"
 
     function addSeparatorKey(parentKey: string | null, key: string): string {
         if (parentKey == null) {
             return key
         }
-        if (options?.separator === "dot") {
-            return `${parentKey}.${key}`
-        }
-        return `${parentKey}[${key}]`
+        return isDot ? `${parentKey}.${key}` : `${parentKey}[${key}]`
     }
     
     function toNestedData(parentKey: string | null, value: any[string]): void {
@@ -29,7 +26,7 @@ export function nestedMultiPart(data: object, options: NestedObjectOptions = def
             const val = value[key]
             // check if the value of objects is another objects
             if (val instanceof Array ||
-            (val instanceof Object && !(val instanceof Blob))) {
+            (val instanceof Object && !(val instanceof Blob || val instanceof File))) {
 
                 toNestedData(addSeparatorKey(parentKey, key), value[key])
 
@@ -50,18 +47,16 @@ export function nestedMultiPart(data: object, options: NestedObjectOptions = def
     return nestedData
 }
 
-export function nestedMultiPartForm(data: object, options: NestedObjectOptions = defaultOptions): FormData {
-    const nestedData = nestedMultiPart(data, options)
+export function toFormData(data: object, options: NestedDataOptions = defaultOptions): FormData {
+    const nestedData = toObject(data, options)
     const form = new FormData()
 
     Object.keys(nestedData).forEach(key => {
-        const value = nestedData[key]
+        let value = nestedData[key]
 
         if (typeof value === "number" || typeof value === "boolean")
-            form.append(key, value.toString())
-        else
-            form.append(key, value)
-
+            value = value.toString()
+        form.set(key, value)
     })
 
     return form

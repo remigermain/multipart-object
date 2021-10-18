@@ -1,15 +1,14 @@
 export declare class NestedParser {
     protected readonly data: object;
-    protected _options: NestedObjectOptions;
+    protected options: NestedParserOptions;
     protected _valid: boolean | null;
     protected _validateData: object;
     protected _errors: Error | null;
-    constructor(data: object, options?: NestedObjectOptions);
+    protected isDot: boolean;
+    constructor(data: object, options?: NestedParserOptions);
     protected splitKey(key: string): string[];
-    protected setType(dtc: any[any] | {
-        [key: string]: any;
-    }, key: string, value: any, full_keys: string): void;
-    protected decompile(data: {
+    protected constructDepth(tmp: NestedElement, key: string, value: any, memory: MemoryNested, full_key: string, last?: boolean): string | number;
+    protected parse(data: {
         [key: string]: any;
     }): object;
     isValid(): boolean;

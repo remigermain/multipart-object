@@ -1,75 +1,113 @@
-import { defaultOptions, isDigit, isPrimitive} from "./utils"
-
 
 //options
+const defaultOptions: NestedParserOptions = {
+    separator: "bracket",
+    throwDuplicate: true,
+    assignDuplicate: false
+}
+
+function isDigit(val: string): boolean {
+    return isDigit._isDigit.test(val)
+}
+isDigit._isDigit = new RegExp(/^\d+$/)
+
 
 export class NestedParser {
     
-    protected _options: NestedObjectOptions
+    protected options: NestedParserOptions
     protected _valid: boolean | null = null
     protected _validateData: object = {}
     protected _errors: Error | null = null
 
+    protected isDot: boolean
+
     constructor(
         protected readonly data: object,
-        options: NestedObjectOptions = defaultOptions
+        options: NestedParserOptions = defaultOptions
     ) {
-        this._options = {...defaultOptions, ...options} as const
+        this.options = {...defaultOptions, ...options} as const
+
+        this.isDot = this.options.separator === "dot"
     }
+
 
     protected splitKey(key: string): string[] {
 
-        // remove space
-        const results: string[] = []
-        let check = -2
-        key.split(/\[|\]/).forEach((select: string) => {
-            if (select) {
-                check += select.length + 2
-                results.push(select)
+        const pattern = (this.isDot ? /\./g : /\[|\]/g)
+        const pattern_length = (this.isDot ? 1 : 2)
+
+        let length = -pattern_length
+
+        const keys: string[] = key.replace(/\s+/g, "").split(pattern).filter(k => {
+            if (k) {
+                length += k.length + pattern_length
+                return k
             }
         })
 
-        if (key.length != check || results.length == 0)
-            throw new Error(`invalid format from key ${key}`)
-        return results
+        if (key.length !== length)
+            throw new Error(`key "${key}" is wrong formated`)
+
+        return keys
     }
 
-    protected setType(dtc: any[any] | {[key: string]: any} , key: string, value: any, full_keys: string): void {
-        if (dtc instanceof Array) {
-            const index = parseInt(key)
-            if (dtc.length < index)
-                throw new Error(`key \"${full_keys}\" is upper than actual list`)
-            if (dtc.length == index)
-                dtc.push(value)
-            else if (isPrimitive(dtc[index]))
-                throw new Error(`invalid rewrite key from \"${full_keys}\" to \"${dtc}\"`)
-        } else if (!(key in dtc)) {
-            dtc[key] = value
+    protected constructDepth (tmp: NestedElement, key: string, value: any, memory: MemoryNested, full_key: string, last = false): string | number {
+        if (tmp instanceof Array) {
+            const skey = parseInt(key)
+            if (tmp.length < skey)
+            throw new Error(`array indice from key "${full_key}" is upper than actual array`)
+            if (tmp.length === skey ) {
+                tmp.push(value)
+            }
+            
+            return skey
         }
-        else if (isPrimitive(value))
-            throw new Error(`invalid rewrite key from \"${full_keys}\" to \"${dtc}\"`)
+        if (["number", "string", "boolean"].includes(typeof tmp) ) {
+            if (this.options.throwDuplicate)
+                throw new Error(`the key "${key}" as already set`)
+            else if (this.options.assignDuplicate) {
+                tmp = memory.tmp
+                tmp[memory.key] = memory.type
+                return this.constructDepth(tmp[memory.key], key, value, memory, full_key, last)
+            }
+        }
+        else if (!(key in tmp) || (last && this.options.assignDuplicate)) {
+            tmp[key] = value
+        }
+        return key
     }
 
-    protected decompile(data: {[key: string]: any}): object {
+    protected parse(data: {[key: string]: any}): object {
         const obj: {[key: string]: any} = {}
 
-        Object.keys(data).forEach((key: string) => {
-            // @ts-ignore TS7053
-            const keys = this.splitKey(key.replace(/\s/g, ""))
-            let tmp: object | any[any] = obj
+        Object.keys(data).forEach(key => {
+            const keys = this.splitKey(key)
 
-            let idx = -1
-            while (++idx < (keys.length - 1)) {
-            const keyNum = parseInt(key)
-                const value = (isDigit(keys[idx + 1]) ? [] : {})
+            let tmp = obj
 
-                const index = keys[idx]
-                this.setType(tmp,  index, value, key)
-                tmp = tmp[index]
+            // need it for duplicate
+            const memory: MemoryNested =  {
+                tmp: tmp,
+                key: keys[0],
+                type: {}
             }
 
-            // set the last value of nested data
-            this.setType(tmp, keys[idx], data[key], key)
+            for (let index = 0; index < keys.length - 1; index++) {
+                
+                // if the next key is a digit we put a array
+                const nextType = isDigit(keys[index+1]) ? [] : {}
+
+                const nkey = this.constructDepth(tmp, keys[index], nextType, memory, key)
+                
+                // reset the actual var
+                memory.tmp = tmp
+                memory.key = nkey
+                memory.type = nextType
+
+                tmp = tmp[nkey]
+            }
+            const value = data[key]
+            this.constructDepth(tmp, keys[keys.length - 1], value, memory, key, true)
         })
 
         return obj
@@ -78,7 +116,7 @@ export class NestedParser {
     isValid() : boolean {
         this._valid = false
         try {
-            this._validateData = this.decompile(this.data)
+            this._validateData = this.parse(this.data)
             this._valid = true
         } catch (e: any) {
             this._errors = e
