@@ -1,10 +1,5 @@
 import { toObject, toFormData } from "../src/nestedMultiPart"
 
-// @ts-ignore
-// import { Blob } from "blob-polyfill"
-
-
-
 describe("convert from data nested options:bracket", () => {
 
   it('simple', () => {
@@ -131,7 +126,7 @@ describe("convert from data nested options:bracket", () => {
         "element2"
       ],
       // @ts-ignore
-      file: new Blob([]),
+      file: new Blob([], "filename"),
     }
     const expected = {
       'title': 'title',
@@ -144,7 +139,7 @@ describe("convert from data nested options:bracket", () => {
 
   it('blob nested', () => {
     // @ts-ignore
-    const b = new Blob([])
+    const b = new Blob([], "filename")
     const obj = {
       title: 'title',
       array: [
@@ -172,7 +167,7 @@ describe("convert from data nested options:bracket", () => {
   options dots
 */
 
-const options: NestedParserOptions = {
+const options: NestedDataOptions = {
     separator: "dot"
 }
 
@@ -295,10 +290,11 @@ describe("convert from data nested options:bracket", () => {
   })
 
   it('formdata', () => {
-    const obj = {
+    const date = new Date("2021-01-01")
+    const data = {
       "id": 14,
       "name": "ytrjtryhgmhgmhgmgmhgmhg",
-      "born": "2020-10-04",
+      "born": date,
       "death": "2020-10-04",
       "profil": { "_new": "u" },
       "wikipedia": "",
@@ -324,7 +320,7 @@ describe("convert from data nested options:bracket", () => {
     const expected: {[key: string]: any} = {
       "id": 14,
       "name": "ytrjtryhgmhgmhgmgmhgmhg",
-      "born": "2020-10-04",
+      "born": date,
       "death": "2020-10-04",
       "profil._new": "u",
       "wikipedia": "",
@@ -337,15 +333,18 @@ describe("convert from data nested options:bracket", () => {
       "tags.0.value": 10,
       "tags.0.display_name": "ytrjtryhgmhgmhgmgmhgmhg",
     }
-    const form = toFormData(obj, options)
+    const form = toFormData(data, options)
 
     expect(form).toBeInstanceOf(FormData)
 
     Object.keys(expected).forEach(k => {
       let value = expected[k]
-      if (typeof value === 'number' || typeof value === 'boolean') {
-        value = value.toString()
+
+      // check if number, boolean, or date is converted to string
+      if (typeof value === 'number' || typeof value === 'boolean' || value instanceof Date) {
+        value = String(value)
       }
+
       expect(form.get(k)).toEqual(value)
     })
   })

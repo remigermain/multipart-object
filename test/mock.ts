@@ -3,10 +3,8 @@
 // emulate Blob,file and formdata for jest test
 
 global.Blob = class Blob {
-    constructor(blobPart? : BlopP){
-    }
+    constructor(bytes: any[] = [], filename: string | null = null){}
 }
-global.File = class File extends Blob {}
 
 
 global.FormData = class FormData {

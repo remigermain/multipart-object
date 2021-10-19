@@ -23,10 +23,11 @@ export function toObject(data: object, options: NestedDataOptions = defaultOptio
     function toNestedData(parentKey: string | null, value: any[string]): void {
         Object.keys(value).forEach(key => {
 
-            const val = value[key]
+            let val = value[key]
             // check if the value of objects is another objects
+
             if (val instanceof Array ||
-            (val instanceof Object && !(val instanceof Blob || val instanceof File))) {
+            (val instanceof Object && !(val instanceof Blob || val instanceof Date))) {
 
                 toNestedData(addSeparatorKey(parentKey, key), value[key])
 
@@ -53,9 +54,10 @@ export function toFormData(data: object, options: NestedDataOptions = defaultOpt
 
     Object.keys(nestedData).forEach(key => {
         let value = nestedData[key]
-
-        if (typeof value === "number" || typeof value === "boolean")
-            value = value.toString()
+        // convert number, boolean, date or any value to string
+        if (!(value instanceof Blob)) {
+            value = String(value)
+        }
         form.set(key, value)
     })
 
