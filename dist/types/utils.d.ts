@@ -19,7 +19,7 @@ declare type NestedElement = {
     [key: string]: any;
 } | [[index: number]];
 interface NestedMultiPartData {
-    [key: string]: string | boolean | number | Blob | File;
+    [key: string]: string | boolean | number | Date | Blob;
 }
 interface ObjectDepth {
     [key: string]: any;
