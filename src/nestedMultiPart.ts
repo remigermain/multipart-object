@@ -1,4 +1,3 @@
-
 const defaultOptions: NestedDataOptions = {
     separator: "bracket"
 }
@@ -23,7 +22,7 @@ export function toObject(data: object, options: NestedDataOptions = defaultOptio
     function toNestedData(parentKey: string | null, value: any[string]): void {
         Object.keys(value).forEach(key => {
 
-            let val = value[key]
+            const val = value[key]
             // check if the value of objects is another objects
 
             if (val instanceof Array ||

@@ -1,8 +1,4 @@
-/*
-
-    type for nested options
-
-*/
+/* eslint-disable */
 
 type Separator = "dot" | "bracket"
 
@@ -29,13 +25,3 @@ type NestedElement = {[key: string]: any} | [[index: number]]
 interface NestedMultiPartData {
     [key: string]: string | boolean | number | Date | Blob
 }
-
-interface ObjectDepth{
-    [key: string]: any
-}
-
-interface ArrayDepth{
-    [key: number]: any
-}
-
-type NestedDepth = ArrayDepth | ObjectDepth

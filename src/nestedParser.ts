@@ -1,4 +1,3 @@
-
 //options
 const defaultOptions: NestedParserOptions = {
     separator: "bracket",
@@ -123,7 +122,6 @@ export class NestedParser {
         }
         return this._valid
     }
-
 
     get validateData(): object {
         if (this._valid === null)

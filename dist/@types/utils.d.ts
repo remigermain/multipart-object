@@ -21,10 +21,3 @@ declare type NestedElement = {
 interface NestedMultiPartData {
     [key: string]: string | boolean | number | Date | Blob;
 }
-interface ObjectDepth {
-    [key: string]: any;
-}
-interface ArrayDepth {
-    [key: number]: any;
-}
-declare type NestedDepth = ArrayDepth | ObjectDepth;
