@@ -184,9 +184,9 @@ For this working perfectly you need to follow this rules:
 	}
 ```
 
-## How to use it
+## Parser usage
 ```js
-import { NestedParser } from 'multipart-object'
+const NestedParser = require('multipart-object')
 
 // options is optional
 const options = {
@@ -223,7 +223,7 @@ const options = {
 	throwDuplicate: true,
 
 	/*
-    overide the duplicate keys, you need to set "raise_duplicate" to False
+    overide the duplicate keys, you need to set "throwDuplicate" to False
 	 ex :
 	 {
 		"article": 42,
@@ -240,3 +240,7 @@ const options = {
 	assignDuplicate: false
 }
 ```
+
+## License
+
+[MIT](https://github.com/remigermain/multipart-object/blob/main/LICENSE)
