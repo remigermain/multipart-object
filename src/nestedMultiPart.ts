@@ -13,7 +13,7 @@ export function toObject(data: object, options: NestedDataOptions = defaultOptio
     const isDot = options?.separator == "dot"
     const isMixed = options?.separator == "mixed"
 
-    function addSeparatorKey(parentKey: string | undefined, key: string, value: any[] | Object): string {
+    function addSeparatorKey(parentKey: string | undefined, key: string, value: any[] | object): string {
         if (parentKey == null) {
             return key
         }

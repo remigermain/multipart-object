@@ -32,7 +32,7 @@ export class NestedParser {
     }
 
     protected mixedSplit(key: string): string[] {
-        const r = RegExp(/(^[^\[\]\.]+)|\[(\d+)\]|(\.\w+)/)
+        const r = RegExp(/(^[^[\].]+)|\[(\d+)\]|(\.\w+)/)
 
         let length = 0
         const arr: any[] = key.split(r).filter(r => r && r.length ? r : undefined)
