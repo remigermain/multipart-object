@@ -168,7 +168,7 @@ describe("convert from data nested options:bracket", () => {
 */
 
 const options: NestedDataOptions = {
-    separator: "dot"
+  separator: "dot"
 }
 
 describe("convert from data nested options:bracket", () => {
@@ -317,7 +317,7 @@ describe("convert from data nested options:bracket", () => {
         }
       ]
     }
-    const expected: {[key: string]: any} = {
+    const expected: { [key: string]: any } = {
       "id": 14,
       "name": "ytrjtryhgmhgmhgmgmhgmhg",
       "born": date,
@@ -347,6 +347,60 @@ describe("convert from data nested options:bracket", () => {
 
       expect(form.get(k)).toEqual(value)
     })
+  })
+
+  it('mixed', () => {
+    const obj = {
+      "id": 14,
+      "name": "ytrjtryhgmhgmhgmgmhgmhg",
+      "born": "2020-10-04",
+      "death": "2020-10-04",
+      "profil": { "_new": "u" },
+      "wikipedia": "",
+      "langs": [
+        {
+          "id": 5,
+          "biography": "<p>hertherh httrehrehert</p>",
+          "language": "de"
+        },
+        {
+          "biography": "<p>ytjyrrtyrtjytrj</p>",
+          "language": "en",
+          "_new": true
+        }
+      ],
+      "tags": [
+        {
+          "value": 10,
+          "display_name": [
+            [
+              "vc",
+              {
+                "check": true
+              }
+            ]
+          ]
+        }
+      ]
+    }
+    const expected = {
+      "id": 14,
+      "name": "ytrjtryhgmhgmhgmgmhgmhg",
+      "born": "2020-10-04",
+      "death": "2020-10-04",
+      "profil._new": "u",
+      "wikipedia": "",
+      "langs[0].id": 5,
+      "langs[0].biography": "<p>hertherh httrehrehert</p>",
+      "langs[0].language": "de",
+      "langs[1].biography": "<p>ytjyrrtyrtjytrj</p>",
+      "langs[1].language": "en",
+      "langs[1]._new": true,
+      "tags[0].value": 10,
+      "tags[0].display_name[0][0]": "vc",
+      "tags[0].display_name[0][1].check": true
+    }
+    expect(toObject(obj, { "separator": "mixed" })).toEqual(expected)
   })
 
 

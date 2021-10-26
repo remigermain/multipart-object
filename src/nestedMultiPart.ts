@@ -10,38 +10,39 @@ const defaultOptions: NestedDataOptions = {
 export function toObject(data: object, options: NestedDataOptions = defaultOptions): NestedMultiPartData {
     const nestedData: NestedMultiPartData = {}
     options = { ...defaultOptions, ...options }
-	const isDot = options?.separator == "dot"
+    const isDot = options?.separator == "dot"
+    const isMixed = options?.separator == "mixed"
 
-    function addSeparatorKey(parentKey: string | null, key: string): string {
+    function addSeparatorKey(parentKey: string | undefined, key: string, value: any[] | Object): string {
         if (parentKey == null) {
             return key
         }
-        return isDot ? `${parentKey}.${key}` : `${parentKey}[${key}]`
+        return isDot || isMixed && !(value instanceof Array) ? `${parentKey}.${key}` : `${parentKey}[${key}]`
     }
-    
-    function toNestedData(parentKey: string | null, value: any[string]): void {
+
+    function toNestedData(parentKey: string | undefined, value: any[string]): void {
         Object.keys(value).forEach(key => {
 
             const val = value[key]
             // check if the value of objects is another objects
 
             if (val instanceof Array ||
-            (val instanceof Object && !(val instanceof Blob || val instanceof Date))) {
+                (val instanceof Object && !(val instanceof Blob || val instanceof Date))) {
 
-                toNestedData(addSeparatorKey(parentKey, key), value[key])
+                toNestedData(addSeparatorKey(parentKey, key, value), val)
 
             } else {
 
                 // assign value when you are in last key
-                const parent_key = addSeparatorKey(parentKey, key)
-                nestedData[parent_key] =val
+                const parent_key = addSeparatorKey(parentKey, key, value)
+                nestedData[parent_key] = val
 
             }
 
         })
     }
-    
-    toNestedData(null, data)
+
+    toNestedData(undefined, data)
 
 
     return nestedData

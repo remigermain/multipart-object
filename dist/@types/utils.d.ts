@@ -1,4 +1,4 @@
-declare type Separator = "dot" | "bracket";
+declare type Separator = "dot" | "bracket" | "mixed";
 interface NestedDataOptions {
     separator?: Separator;
 }

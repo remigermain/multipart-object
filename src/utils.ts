@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-type Separator = "dot" | "bracket"
+type Separator = "dot" | "bracket" | "mixed"
 
 interface NestedDataOptions {
     separator?: Separator,
@@ -12,12 +12,12 @@ interface NestedParserOptions extends NestedDataOptions {
 }
 
 interface MemoryNested {
-    tmp: any[] | {[key: string]: any} | object ,
+    tmp: any[] | { [key: string]: any } | object,
     key: string | number,
-    type: any[] | {[key: string]: any} | null
+    type: any[] | { [key: string]: any } | null
 }
 
-type NestedElement = {[key: string]: any} | [[index: number]]
+type NestedElement = { [key: string]: any } | [[index: number]]
 /*
     type for nested form
 */
