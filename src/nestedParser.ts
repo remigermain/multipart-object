@@ -1,11 +1,15 @@
-//options
+import { NestedParserOptions, NestedElement, MemoryNested } from './utils'
+
 const defaultOptions: NestedParserOptions = {
     separator: "bracket",
     throwDuplicate: true,
     assignDuplicate: false
 }
 
-function isDigit(val: string): boolean {
+function isDigit(val: string | number): boolean {
+    if (typeof val === 'number') {
+        return true
+    }
     return isDigit._isDigit.test(val)
 }
 isDigit._isDigit = new RegExp(/^\d+$/)
@@ -20,6 +24,7 @@ export class NestedParser {
 
     protected isDot: boolean
     protected isMixed: boolean
+    protected isMixedDot: boolean
 
     constructor(
         protected readonly data: object,
@@ -29,34 +34,80 @@ export class NestedParser {
 
         this.isDot = this.options.separator === "dot"
         this.isMixed = this.options.separator === "mixed"
+        this.isMixedDot = this.options.separator === "mixedDot"
+        if (this.isMixedDot) {
+            this.isMixed = true
+        }
     }
 
-    protected mixedSplit(key: string): string[] {
-        const r = RegExp(/(^[^[\].]+)|\[(\d+)\]|(\.\w+)/)
-
-        let length = 0
-        const arr: any[] = key.split(r).filter(r => r && r.length ? r : undefined)
-
-        const e = arr.map((key, idx) => {
-            length += key.length
-            if (idx) {
-                if (key[0] != '.') {
-                    length += 2
-                    return parseInt(key[0])
-                } else if (key.length == 1) {
-                    length--
+    protected mixedSplit(key: string): Array<string | number> {
+        function span(key: string, i: number): number {
+            const old = i
+            while (i != key.length) {
+                if (key[i] == '.' || key[i] == ']' || key[i] == '[') {
+                    break
                 }
-                // remove dot
-                return key.substring(1, key.length)
+                i++
             }
-            return key
-        })
-        if (key.length !== length)
-            throw new Error(`key "${key}" is wrong formated`)
-        return e
+            if (old == i) {
+                throw new Error(
+                    `invalid format key '${fullKeys}', empty key value at position ${i + pos}`)
+            }
+            return i
+        }
+
+        const fullKeys = key
+        let idx = span(key, 0)
+        const pos = idx
+        const keys: Array<string | number> = [key.substring(0, idx)]
+        key = key.substring(idx, key.length)
+
+        let i = 0
+        let lastIsArray = false
+        while (i < key.length) {
+            if (key[i] == '[') {
+                i++
+                idx = span(key, i)
+                if (key[idx] != ']') {
+                    throw new Error(
+                        `invalid format key '${fullKeys}', not end with bracket at position ${i + pos}`)
+                }
+                const sub = key.substring(i, idx)
+                if (!isDigit(sub)) {
+                    throw new Error(
+                        `invalid format key '${fullKeys}', list key is not a valid number at position ${i + pos}`)
+                }
+                keys.push(parseInt(key.substring(i, idx)))
+                i = idx + 1
+                lastIsArray = true
+            }
+            else if (key[i] == ']') {
+                throw new Error(
+                    `invalid format key '${fullKeys}', not start with bracket at position ${i + pos}`)
+            }
+            else if ((key[i] == '.' && !this.isMixedDot) || (
+                this.isMixedDot && (
+                    (key[i] != '.' && lastIsArray) ||
+                    (key[i] == '.' && !lastIsArray)
+                )
+            )) {
+                if (!this.isMixedDot || !lastIsArray) {
+                    i++
+                }
+                idx = span(key, i)
+                keys.push(key.substring(i, idx))
+                i = idx
+                lastIsArray = false
+            }
+            else {
+                throw new Error(
+                    `invalid format key '${fullKeys}', invalid char at position ${i + pos}`)
+            }
+        }
+        return keys
     }
 
-    protected splitKey(key: string): string[] {
+    protected splitKey(key: string): Array<string | number> {
 
         const k = key.replace(/\s+/g, "")
         if (k.length != key.length) {
@@ -85,9 +136,9 @@ export class NestedParser {
         return keys
     }
 
-    protected constructDepth(tmp: NestedElement, key: string, value: any, memory: MemoryNested, full_key: string, last = false): string | number {
+    protected constructDepth(tmp: NestedElement, key: string | number, value: any, memory: MemoryNested, full_key: string, last = false): string | number {
         if (tmp instanceof Array) {
-            const skey = parseInt(key)
+            const skey = this.isMixed ? key : parseInt(key as string)
             if (tmp.length < skey)
                 throw new Error(`array indice '${skey}' from key '${full_key}' is upper than actual array`)
             if (tmp.length === skey) {
