@@ -71,7 +71,8 @@ const options = {
 	//the separator
 	//with bracket:  article[title][authors][0]: "jhon doe"
 	//with dot:      article.title.authors.0: "jhon doe"
-	separator: 'bracket' or 'dot', // default is bracket
+	//with mixed:      article.title.authors[0]: "jhon doe"
+	separator: 'bracket' or 'dot' or 'mixed', // default is bracket
 }
 
 nestedMultiPart(data, options)
@@ -85,53 +86,24 @@ A parser made for nodeJs
 
 For this working perfectly you need to follow this rules:
 
-- a first key need to be set ex: `title[0]` or `title`, in both the first key is `title`
-- each sub key need to be seperate by brackets `[ ]` or dot `.` (depends of your options)
-- if sub key are a full number, is converted to list *ex:* `[0]` or `[42]`
-- if sub key is Not a number is converted to dictionary *ex:* `[username]` or `[article]`
-- no space between separator
-- by default,the duplicate keys can't be set (see options to override that)
-  ex:
+
+For this to work perfectly, you must follow the following rules:
+
+- A first key always need to be set. ex: `title[0]` or `title`. In both cases the first key is `title`
+- Each sub key need to be separate by brackets `[ ]` or dot `.` (depends of your options)
+- For `mixed` options, brackets `[]` is for list, and dot `.` is for object
+- Don't put spaces between separators.
+- By default, you can't set duplicates keys (see options)
+  
+## How it works:
+
+Attributes where sub keys are full numbers only are automatically converted into lists:
 
 ```python
-	data = {
-		'title[0]': 'my-value'``
-	}
-	# output
-	output = {
-		'title': [
-			'my-value'
-		]
-	}
-
-	# invalid key
-	data = {
-		'title[688]': 'my-value'
-	}
-	# ERROR , you set a number is upper thans actual list
-
-
-	# wrong format if separator is brackets (see options)
-	data = {
-		'title[0]]]': 'my-value',
-		'title[0': 'my-value',
-		'title[': 'my-value',
-		'title[]': 'my-value',
-		'[]': 'my-value',
-	}
-
-	data = {
-		'title': 42,
-		'title[object]': 42
-	}
-	# Error , title as alerady set by primitive value (int, boolean or string)
-
-	# many element in list
 	data = {
 		'title[0]': 'my-value',
 		'title[1]': 'my-second-value'
 	}
-	# output
 	output = {
 		'title': [
 			'my-value',
@@ -139,50 +111,45 @@ For this working perfectly you need to follow this rules:
 		]
 	}
 
-	# converted to object
+	# Be aware of the fact that you have to respect the order of the indices for arrays, thus 
+    	'title[2]': 'my-value' # Invalid (you have to set title[0] and title[1] before)
+
+    # Also, you can't create an array on a key already set as a prinitive value (int, boolean or string):
+		'title': 42,
+		'title[object]': 42 # Invalid
+```
+
+
+
+Attributes where sub keys are other than full numbers are converted into Python dictionary:
+
+```python
 	data = {
 		'title[key0]': 'my-value',
 		'title[key7]': 'my-second-value'
 	}
-	# output
 	output = {
 		'title': {
 			'key0': 'my-value',
 			'key7': 'my-second-value'
 		}
 	}
-
-	# you have no limit for chained key
+    
+    # You have no limit for chained key:
 	data = {
 		'the[0][chained][key][0][are][awesome][0][0]': 'im here !!'
 	}
-	# with "dot" separator in options is look like that
+	# With "dot" separator option:
 	data = {
 		'the.0.chained.key.0.are.awesome.0.0': 'im here !!'
 	}
-
-	# the output
-	output: {
-		'the': [
-			{
-				'chained':{
-					'key': [
-						{
-							'are': {
-								'awesome':
-								[
-									[
-										'im here !!'
-									]
-								]
-							}
-						}
-					]
-				}
-			}
-		]
+	# with "mixed" separator option:
+	data = {
+		'the[0].chained.key[0].are.awesome[0][0]': 'im here !!'
 	}
 ```
+
+
 
 ## Parser usage
 ```js
@@ -209,7 +176,8 @@ const options = {
 	// the separator
 	// with bracket:  article[title][authors][0]: "jhon doe"
 	// with dot:      article.title.authors.0: "jhon doe"
-	separator: 'bracket' /* or */ 'dot', // default is bracket
+	// with mixed:      article.title.authors[0]: "jhon doe"
+	separator: 'bracket' /* or */ 'dot' /* or */ 'mixed', // default is bracket
 
 
     /*
