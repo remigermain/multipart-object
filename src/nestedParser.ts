@@ -85,13 +85,13 @@ export class NestedParser {
                 throw new Error(
                     `invalid format key '${fullKeys}', not start with bracket at position ${i + pos}`)
             }
-            else if ((key[i] == '.' && !this.isMixedDot) || (
-                this.isMixedDot && (
+            else if ((key[i] == '.' && this.isMixedDot) || (
+                !this.isMixedDot && (
                     (key[i] != '.' && lastIsArray) ||
                     (key[i] == '.' && !lastIsArray)
                 )
             )) {
-                if (!this.isMixedDot || !lastIsArray) {
+                if (this.isMixedDot || !lastIsArray) {
                     i++
                 }
                 idx = span(key, i)

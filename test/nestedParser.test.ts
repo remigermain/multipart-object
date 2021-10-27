@@ -304,7 +304,7 @@ describe('mixed separator', () => {
             'langs[1].description[0][2].puilo': 'description4',
             'langs[1].language': "language1"
         }
-        const parser = new NestedParser(data, { separator: "mixed" })
+        const parser = new NestedParser(data, { separator: "mixedDot" })
         expect(parser.isValid()).toBeTruthy()
         const expected = {
             'title': 'title',
@@ -340,6 +340,142 @@ describe('mixed separator', () => {
         const data = {
             'title[0].5555': 'lalal',
         }
+        const parser = new NestedParser(data, { separator: "mixedDot" })
+        expect(parser.isValid()).toBeTruthy()
+        const expected = {
+            title: [
+                {
+                    "5555": "lalal"
+                }
+            ]
+        }
+        expect(parser.validateData).toEqual(expected)
+    })
+
+    describe('invalid', () => {
+
+        it('end dot', () => {
+            const data = {
+                'title.': 'lalal',
+            }
+            const parser = new NestedParser(data, { separator: "mixedDot" })
+            expect(parser.isValid()).toBeFalsy()
+        })
+
+        it('empty list', () => {
+            const data = {
+                'title[]': 'lalal',
+            }
+            const parser = new NestedParser(data, { separator: "mixedDot" })
+            expect(parser.isValid()).toBeFalsy()
+        })
+
+        it('empty dot ended', () => {
+            const data = {
+                'title[1].': 'lalal',
+            }
+            const parser = new NestedParser(data, { separator: "mixedDot" })
+            expect(parser.isValid()).toBeFalsy()
+        })
+
+        it('empty list', () => {
+            const data = {
+                'title[1].': 'lalal',
+            }
+            const parser = new NestedParser(data, { separator: "mixedDot" })
+            expect(parser.isValid()).toBeFalsy()
+        })
+
+        it('empty bracket alone', () => {
+            const data = {
+                'title[': 'lalal',
+            }
+            const parser = new NestedParser(data, { separator: "mixedDot" })
+            expect(parser.isValid()).toBeFalsy()
+        })
+
+        it('character in bracket', () => {
+            const data = {
+                'title[ttt]': 'lalal',
+            }
+            const parser = new NestedParser(data, { separator: "mixedDot" })
+            expect(parser.isValid()).toBeFalsy()
+        })
+
+        it('character dot in bracket', () => {
+            const data = {
+                'title[t.tt]': 'lalal',
+            }
+            const parser = new NestedParser(data, { separator: "mixedDot" })
+            expect(parser.isValid()).toBeFalsy()
+        })
+
+        it('number dot in bracket', () => {
+            const data = {
+                'title[44.4]': 'lalal',
+            }
+            const parser = new NestedParser(data, { separator: "mixedDot" })
+            expect(parser.isValid()).toBeFalsy()
+        })
+
+    })
+})
+
+
+
+describe('mixed-dot separator', () => {
+    it('real', () => {
+        const data = {
+            'title': 'title',
+            'date': "time",
+            'langs[0]id': "id",
+            'langs[0]title': 'title',
+            'langs[0]description': 'description',
+            'langs[0]language': "language",
+            'langs[1]id': "id1",
+            'langs[1]title': 'title1',
+            'langs[1]description[0][0]': 'description1',
+            'langs[1]description[0][1]': 'description2',
+            'langs[1]description[0][2]obj': 'description3',
+            'langs[1]description[0][2]puilo': 'description4',
+            'langs[1]language': "language1"
+        }
+        const parser = new NestedParser(data, { separator: "mixed" })
+        expect(parser.isValid()).toBeTruthy()
+        const expected = {
+            'title': 'title',
+            'date': "time",
+            'langs': [
+                {
+                    'id': 'id',
+                    'title': 'title',
+                    'description': 'description',
+                    'language': 'language'
+                },
+                {
+                    'id': 'id1',
+                    'title': 'title1',
+                    'description': [
+                        [
+                            'description1',
+                            'description2',
+                            {
+                                obj: "description3",
+                                puilo: "description4",
+                            }
+                        ]
+                    ],
+                    'language': 'language1'
+                }
+            ]
+        }
+        expect(parser.validateData).toStrictEqual(expected)
+    })
+
+    it('number dot in bracket', () => {
+        const data = {
+            'title[0]5555': 'lalal',
+        }
         const parser = new NestedParser(data, { separator: "mixed" })
         expect(parser.isValid()).toBeTruthy()
         const expected = {
@@ -415,142 +551,6 @@ describe('mixed separator', () => {
                 'title[44.4]': 'lalal',
             }
             const parser = new NestedParser(data, { separator: "mixed" })
-            expect(parser.isValid()).toBeFalsy()
-        })
-
-    })
-})
-
-
-
-describe('mixed-dot separator', () => {
-    it('real', () => {
-        const data = {
-            'title': 'title',
-            'date': "time",
-            'langs[0]id': "id",
-            'langs[0]title': 'title',
-            'langs[0]description': 'description',
-            'langs[0]language': "language",
-            'langs[1]id': "id1",
-            'langs[1]title': 'title1',
-            'langs[1]description[0][0]': 'description1',
-            'langs[1]description[0][1]': 'description2',
-            'langs[1]description[0][2]obj': 'description3',
-            'langs[1]description[0][2]puilo': 'description4',
-            'langs[1]language': "language1"
-        }
-        const parser = new NestedParser(data, { separator: "mixedDot" })
-        expect(parser.isValid()).toBeTruthy()
-        const expected = {
-            'title': 'title',
-            'date': "time",
-            'langs': [
-                {
-                    'id': 'id',
-                    'title': 'title',
-                    'description': 'description',
-                    'language': 'language'
-                },
-                {
-                    'id': 'id1',
-                    'title': 'title1',
-                    'description': [
-                        [
-                            'description1',
-                            'description2',
-                            {
-                                obj: "description3",
-                                puilo: "description4",
-                            }
-                        ]
-                    ],
-                    'language': 'language1'
-                }
-            ]
-        }
-        expect(parser.validateData).toStrictEqual(expected)
-    })
-
-    it('number dot in bracket', () => {
-        const data = {
-            'title[0]5555': 'lalal',
-        }
-        const parser = new NestedParser(data, { separator: "mixedDot" })
-        expect(parser.isValid()).toBeTruthy()
-        const expected = {
-            title: [
-                {
-                    "5555": "lalal"
-                }
-            ]
-        }
-        expect(parser.validateData).toEqual(expected)
-    })
-
-    describe('invalid', () => {
-
-        it('end dot', () => {
-            const data = {
-                'title.': 'lalal',
-            }
-            const parser = new NestedParser(data, { separator: "mixedDot" })
-            expect(parser.isValid()).toBeFalsy()
-        })
-
-        it('empty list', () => {
-            const data = {
-                'title[]': 'lalal',
-            }
-            const parser = new NestedParser(data, { separator: "mixedDot" })
-            expect(parser.isValid()).toBeFalsy()
-        })
-
-        it('empty dot ended', () => {
-            const data = {
-                'title[1].': 'lalal',
-            }
-            const parser = new NestedParser(data, { separator: "mixedDot" })
-            expect(parser.isValid()).toBeFalsy()
-        })
-
-        it('empty list', () => {
-            const data = {
-                'title[1].': 'lalal',
-            }
-            const parser = new NestedParser(data, { separator: "mixedDot" })
-            expect(parser.isValid()).toBeFalsy()
-        })
-
-        it('empty bracket alone', () => {
-            const data = {
-                'title[': 'lalal',
-            }
-            const parser = new NestedParser(data, { separator: "mixedDot" })
-            expect(parser.isValid()).toBeFalsy()
-        })
-
-        it('character in bracket', () => {
-            const data = {
-                'title[ttt]': 'lalal',
-            }
-            const parser = new NestedParser(data, { separator: "mixedDot" })
-            expect(parser.isValid()).toBeFalsy()
-        })
-
-        it('character dot in bracket', () => {
-            const data = {
-                'title[t.tt]': 'lalal',
-            }
-            const parser = new NestedParser(data, { separator: "mixedDot" })
-            expect(parser.isValid()).toBeFalsy()
-        })
-
-        it('number dot in bracket', () => {
-            const data = {
-                'title[44.4]': 'lalal',
-            }
-            const parser = new NestedParser(data, { separator: "mixedDot" })
             expect(parser.isValid()).toBeFalsy()
         })
 

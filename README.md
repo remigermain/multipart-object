@@ -72,8 +72,8 @@ const options = {
 		Separators:
 		with bracket:  article[0][title][authors][0]: "jhon doe"
 		with dot:      article.0.title.authors.0: "jhon doe"
-		with mixed:      article[0].title.authors[0]: "jhon doe"
-		with mixedDot:      article[0]title.authors[0]: "jhon doe"
+		with mixed:      article[0]title.authors[0]: "jhon doe"
+		with mixedDot:      article[0].title.authors[0]: "jhon doe"
 	*/
 	separator: 'bracket' or 'dot' or 'mixed' or 'mixedDot', // default is bracket
 }
@@ -94,8 +94,8 @@ For this to work perfectly, you must follow the following rules:
 
 - A first key always need to be set. ex: `title[0]` or `title`. In both cases the first key is `title`
 - Each sub key need to be separate by brackets `[ ]` or dot `.` (depends of your options)
-- For `mixed` options, brackets `[]` is for list, and dot `.` is for object
-- For `mixedDot` options is same as `mixed` but when a object follow a list no have a dot
+- For `mixed` or `mixedDot` options, brackets `[]` is for list, and dot `.` is for object
+- For `mixedDot` options, is look like `mixed` but with dot when array is follow a object
 - Don't put spaces between separators.
 - By default, you can't set duplicates keys (see options)
   
@@ -149,11 +149,11 @@ Attributes where sub keys are other than full numbers are converted into Python 
 	}
 	# with "mixed" separator option:
 	data = {
-		'the[0].chained.key[0].are.awesome[0][0]': 'im here !!'
-	}
-	# with "mixedDot" separator option:
-	data = {
 		'the[0]chained.key[0]are.awesome[0][0]': 'im here !!'
+	}
+	# with "mixed-dot" separator option (same as 'mixed' but with dot after list to object):
+	data = {
+		'the[0].chained.key[0].are.awesome[0][0]': 'im here !!'
 	}
 ```
 

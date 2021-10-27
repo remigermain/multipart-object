@@ -351,7 +351,7 @@ describe("convert from data nested options:bracket", () => {
   })
 })
 
-describe('mixed separator', () => {
+describe('mixed dot separator', () => {
   it('mixed', () => {
     const obj = {
       "id": 14,
@@ -403,11 +403,11 @@ describe('mixed separator', () => {
       "tags[0].display_name[0][0]": "vc",
       "tags[0].display_name[0][1].check": true
     }
-    expect(toObject(obj, { "separator": "mixed" })).toEqual(expected)
+    expect(toObject(obj, { separator: "mixedDot" })).toEqual(expected)
   })
 
 
-  it('mixed-dot', () => {
+  it('mixed separator', () => {
     const obj = {
       "id": 14,
       "name": "ytrjtryhgmhgmhgmgmhgmhg",
@@ -458,7 +458,7 @@ describe('mixed separator', () => {
       "tags[0]display_name[0][0]": "vc",
       "tags[0]display_name[0][1]check": true
     }
-    expect(toObject(obj, { "separator": "mixedDot" })).toEqual(expected)
+    expect(toObject(obj, { separator: "mixed" })).toEqual(expected)
   })
 })
 

@@ -13,17 +13,17 @@ export function toObject(data: object, options: NestedDataOptions = defaultOptio
     const nestedData: NestedMultiPartData = {}
     options = { ...defaultOptions, ...options }
     const isDot = options?.separator == "dot"
-    const isMixed = options?.separator == "mixed" || options?.separator == "mixedDot"
-    const isMixedDot = options?.separator == "mixedDot"
+    const isMixed = options?.separator == "mixed"
+    const isMixedDot = options?.separator == "mixedDot" || isMixed
 
     function addSeparatorKey(parentKey: string | undefined, key: string, isArray: boolean): string {
         if (parentKey == null) {
             return key
         }
-        if (isMixedDot && parentKey[parentKey.length - 1] == "]" && !isArray) {
+        if (isMixed && parentKey[parentKey.length - 1] == "]" && !isArray) {
             return `${parentKey}${key}`
         }
-        return isDot || isMixed && !isArray ? `${parentKey}.${key}` : `${parentKey}[${key}]`
+        return isDot || isMixedDot && !isArray ? `${parentKey}.${key}` : `${parentKey}[${key}]`
     }
 
     function toNestedData(parentKey: string | undefined, value: any[string]): void {
