@@ -34,10 +34,6 @@
     "parser"
   ],
   "devDependencies": {
-    "@babel/core": "^7.11.4",
-    "@babel/preset-env": "^7.11.0",
-    "@babel/preset-typescript": "^7.15.0",
-    "@rollup/plugin-babel": "^5.2.0",
     "@rollup/plugin-typescript": "^8.2.5",
     "@types/jest": "^27.0.2",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
@@ -50,13 +46,10 @@
     "prettier": "^2.4.1",
     "rollup": "^2.58.0",
     "rollup-plugin-terser": "^7.0.1",
-    "rollup-plugin-ts": "^1.4.7",
     "ts-jest": "^27.0.6",
     "tslib": "^2.3.1",
     "typescript": "^4.4.4"
   },
   "browserslist": "> 0.25%, not dead",
-  "dependencies": {
-    "remove": "^0.1.5"
-  }
+  "dependencies": {}
 }

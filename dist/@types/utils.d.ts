@@ -1,12 +1,12 @@
-declare type Separator = "dot" | "bracket" | "mixed";
-interface NestedDataOptions {
+export declare type Separator = "dot" | "bracket" | "mixed" | "mixedDot";
+export interface NestedDataOptions {
     separator?: Separator;
 }
-interface NestedParserOptions extends NestedDataOptions {
+export interface NestedParserOptions extends NestedDataOptions {
     throwDuplicate?: boolean;
     assignDuplicate?: boolean;
 }
-interface MemoryNested {
+export interface MemoryNested {
     tmp: any[] | {
         [key: string]: any;
     } | object;
@@ -15,9 +15,9 @@ interface MemoryNested {
         [key: string]: any;
     } | null;
 }
-declare type NestedElement = {
+export declare type NestedElement = {
     [key: string]: any;
 } | [[index: number]];
-interface NestedMultiPartData {
+export interface NestedMultiPartData {
     [key: string]: string | boolean | number | Date | Blob;
 }

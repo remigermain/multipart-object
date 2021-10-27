@@ -1,3 +1,4 @@
+import { NestedParserOptions, NestedElement, MemoryNested } from './utils';
 export declare class NestedParser {
     protected readonly data: object;
     protected options: NestedParserOptions;
@@ -6,10 +7,11 @@ export declare class NestedParser {
     protected _errors: Error | null;
     protected isDot: boolean;
     protected isMixed: boolean;
+    protected isMixedDot: boolean;
     constructor(data: object, options?: NestedParserOptions);
-    protected mixedSplit(key: string): string[];
-    protected splitKey(key: string): string[];
-    protected constructDepth(tmp: NestedElement, key: string, value: any, memory: MemoryNested, full_key: string, last?: boolean): string | number;
+    protected mixedSplit(key: string): Array<string | number>;
+    protected splitKey(key: string): Array<string | number>;
+    protected constructDepth(tmp: NestedElement, key: string | number, value: any, memory: MemoryNested, full_key: string, last?: boolean): string | number;
     protected parse(data: {
         [key: string]: any;
     }): object;
