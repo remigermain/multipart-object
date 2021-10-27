@@ -423,7 +423,7 @@ describe('mixed separator', () => {
 
 
 
-describe('mixed-dot separator', () => {
+describe('mixedDot separator', () => {
     it('real', () => {
         const data = {
             'title': 'title',

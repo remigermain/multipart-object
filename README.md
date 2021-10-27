@@ -151,7 +151,7 @@ Attributes where sub keys are other than full numbers are converted into Python 
 	data = {
 		'the[0]chained.key[0]are.awesome[0][0]': 'im here !!'
 	}
-	# with "mixed-dot" separator option (same as 'mixed' but with dot after list to object):
+	# with "mixedDot" separator option (same as 'mixed' but with dot after list to object):
 	data = {
 		'the[0].chained.key[0].are.awesome[0][0]': 'im here !!'
 	}
