@@ -1,6 +1,6 @@
 {
   "name": "multipart-object",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "convert multipart data to nested data",
   "repository": "git@github.com:remigermain/multipart-object.git",
   "author": "rgermain <contact@germainremi.fr>",
