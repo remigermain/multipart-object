@@ -1,7 +1,7 @@
 import { NestedParserOptions, NestedElement, MemoryNested } from './utils'
 
 const defaultOptions: NestedParserOptions = {
-    separator: "bracket",
+    separator: "mixedDot",
     throwDuplicate: true,
     assignDuplicate: false
 }

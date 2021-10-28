@@ -1,7 +1,7 @@
 import { NestedDataOptions, NestedMultiPartData } from './utils'
 
 const defaultOptions: NestedDataOptions = {
-    separator: "bracket"
+    separator: "mixedDot"
 }
 
 /*

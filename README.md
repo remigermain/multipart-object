@@ -129,8 +129,8 @@ Attributes where sub keys are other than full numbers are converted into Python 
 
 ```python
 	data = {
-		'title[key0]': 'my-value',
-		'title[key7]': 'my-second-value'
+		'title.key0': 'my-value',
+		'title.key7': 'my-second-value'
 	}
 	output = {
 		'title': {
@@ -139,21 +139,23 @@ Attributes where sub keys are other than full numbers are converted into Python 
 		}
 	}
     
+
     # You have no limit for chained key:
+	# with "mixedDot" separator option (same as 'mixed' but with dot after list to object):
+	data = {
+		'the[0].chained.key[0].are.awesome[0][0]': 'im here !!'
+	}
+	# with "mixed" separator option:
+	data = {
+		'the[0]chained.key[0]are.awesome[0][0]': 'im here !!'
+	}
+	# With "bracket" separator option:
 	data = {
 		'the[0][chained][key][0][are][awesome][0][0]': 'im here !!'
 	}
 	# With "dot" separator option:
 	data = {
 		'the.0.chained.key.0.are.awesome.0.0': 'im here !!'
-	}
-	# with "mixed" separator option:
-	data = {
-		'the[0]chained.key[0]are.awesome[0][0]': 'im here !!'
-	}
-	# with "mixedDot" separator option (same as 'mixed' but with dot after list to object):
-	data = {
-		'the[0].chained.key[0].are.awesome[0][0]': 'im here !!'
 	}
 ```
 

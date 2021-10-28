@@ -3,12 +3,12 @@ import { NestedParser } from "../src/nestedParser"
 describe("convert form data nested", () => {
 
     it('isValid_no_call', () => {
-        const parser = new NestedParser({ "key": "value" })
+        const parser = new NestedParser({ "key": "value" }, { separator: "bracket" })
         expect(() => parser.validateData).toThrowError(Error)
     })
 
     it('isValid_wrong', () => {
-        const parser = new NestedParser({ "key[]]]": "value" })
+        const parser = new NestedParser({ "key[]]]": "value" }, { separator: "bracket" })
         expect(parser.isValid()).toBeFalsy()
         expect(() => parser.validateData).toThrowError(Error)
     })
@@ -17,7 +17,7 @@ describe("convert form data nested", () => {
         const data = {
             'title[id][length]': 'lalal'
         }
-        const parser = new NestedParser(data)
+        const parser = new NestedParser(data, { separator: "bracket" })
         expect(parser.isValid()).toBeTruthy()
         const expected = {
             'title': {
@@ -34,7 +34,7 @@ describe("convert form data nested", () => {
             'title[id][length]': 'lalal',
             'title[id][value]': 'lalal'
         }
-        const parser = new NestedParser(data)
+        const parser = new NestedParser(data, { separator: "bracket" })
         expect(parser.isValid()).toBeTruthy()
         const expected = {
             'title': {
@@ -53,7 +53,7 @@ describe("convert form data nested", () => {
             'title[id][value]': 'lalal',
             'title[value]': 'lalal'
         }
-        const parser = new NestedParser(data)
+        const parser = new NestedParser(data, { separator: "bracket" })
         expect(parser.isValid()).toBeTruthy()
         const expected = {
             'title': {
@@ -75,7 +75,7 @@ describe("convert form data nested", () => {
             'sub': 'lalal',
             'title[id][recusrive][only][field]': 'icci'
         }
-        const parser = new NestedParser(data)
+        const parser = new NestedParser(data, { separator: "bracket" })
         expect(parser.isValid()).toBeTruthy()
         const expected = {
             'title': {
@@ -100,7 +100,7 @@ describe("convert form data nested", () => {
             'title[id][length]': 'lalal',
             'title[id][  length  ]': 'laffflal',
         }
-        const parser = new NestedParser(data)
+        const parser = new NestedParser(data, { separator: "bracket" })
         expect(parser.isValid()).toBeFalsy()
     })
 
@@ -111,7 +111,7 @@ describe("convert form data nested", () => {
             'sub': 'lalal',
             'title[id][recusrive][only][field]': 'icci',
         }
-        const parser = new NestedParser(data)
+        const parser = new NestedParser(data, { separator: "bracket" })
         expect(parser.isValid()).toBeTruthy()
         const expected = {
             'title': {
@@ -134,7 +134,7 @@ describe("convert form data nested", () => {
         const data = {
             'title': 'lalal'
         }
-        const parser = new NestedParser(data)
+        const parser = new NestedParser(data, { separator: "bracket" })
         expect(parser.isValid()).toBeTruthy()
         const expected = {
             'title': 'lalal'
@@ -148,7 +148,7 @@ describe("convert form data nested", () => {
             'tist[0]': 'lalal',
             'tist[2]': 'lalal',
         }
-        const parser = new NestedParser(data)
+        const parser = new NestedParser(data, { separator: "bracket" })
         expect(parser.isValid()).toBeFalsy()
     })
 
@@ -158,7 +158,7 @@ describe("convert form data nested", () => {
             'tist[0]': 'lalal',
             'tist[]': 'lalal',
         }
-        const parser = new NestedParser(data)
+        const parser = new NestedParser(data, { separator: "bracket" })
         expect(parser.isValid()).toBeFalsy()
     })
 
@@ -167,7 +167,7 @@ describe("convert form data nested", () => {
             'title   ': 'lalal',
             'title': 'dddddddddddddd'
         }
-        const parser = new NestedParser(data)
+        const parser = new NestedParser(data, { separator: "bracket" })
         expect(parser.isValid()).toBeFalsy()
     })
 
@@ -176,7 +176,7 @@ describe("convert form data nested", () => {
             'title': 'lalal',
             'list[0]': 'icicici'
         }
-        const parser = new NestedParser(data)
+        const parser = new NestedParser(data, { separator: "bracket" })
         const expected = {
             'title': 'lalal',
             'list': [
@@ -192,7 +192,7 @@ describe("convert form data nested", () => {
             'title': 'lalal',
             'list[0]': 'icicici'
         }
-        const parser = new NestedParser(data)
+        const parser = new NestedParser(data, { separator: "bracket" })
         expect(parser.isValid()).toBeTruthy()
         const expected = {
             'title': 'lalal',
@@ -208,7 +208,7 @@ describe("convert form data nested", () => {
             'title': 'lalal',
             'list[length][0]': 'icicici'
         }
-        const parser = new NestedParser(data)
+        const parser = new NestedParser(data, { separator: "bracket" })
         const expected = {
             'title': 'lalal',
             'list': {
@@ -228,7 +228,7 @@ describe("convert form data nested", () => {
             'list[0 ]': 'new',
             'list[1]': 'neeew',
         }
-        const parser = new NestedParser(data)
+        const parser = new NestedParser(data, { separator: "bracket" })
         expect(parser.isValid()).toBeFalsy()
     })
 
@@ -245,7 +245,7 @@ describe("convert form data nested", () => {
             'langs[1][description]': 'description1',
             'langs[1][language]': "language1"
         }
-        const parser = new NestedParser(data)
+        const parser = new NestedParser(data, { separator: "bracket" })
         expect(parser.isValid()).toBeTruthy()
         const expected = {
             'title': 'title',
@@ -273,7 +273,7 @@ describe("convert form data nested", () => {
             'title': 'lalal',
             'title[0]': 'lalal',
         }
-        const parser = new NestedParser(data)
+        const parser = new NestedParser(data, { separator: "bracket" })
         expect(parser.isValid()).toBeFalsy()
     })
 
@@ -282,7 +282,7 @@ describe("convert form data nested", () => {
             'title': 'lalal',
             'title[object]': 'lalal',
         }
-        const parser = new NestedParser(data)
+        const parser = new NestedParser(data, { separator: "bracket" })
         expect(parser.isValid()).toBeFalsy()
     })
 })

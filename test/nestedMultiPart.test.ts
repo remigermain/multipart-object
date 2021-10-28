@@ -12,7 +12,7 @@ describe("convert from data nested options:bracket", () => {
       title: 'title',
       key: 'value',
     }
-    expect(toObject(obj)).toEqual(expected)
+    expect(toObject(obj, { separator: "bracket" })).toEqual(expected)
   })
 
   it('object', () => {
@@ -28,7 +28,7 @@ describe("convert from data nested options:bracket", () => {
       'object[title]': 'title',
       'object[key]': 'value'
     }
-    expect(toObject(obj)).toEqual(expected)
+    expect(toObject(obj, { separator: "bracket" })).toEqual(expected)
   })
 
   it('array', () => {
@@ -44,7 +44,7 @@ describe("convert from data nested options:bracket", () => {
       'array[0]': 'element',
       'array[1]': 'element2',
     }
-    expect(toObject(obj)).toEqual(expected)
+    expect(toObject(obj, { separator: "bracket" })).toEqual(expected)
   })
 
 
@@ -69,7 +69,7 @@ describe("convert from data nested options:bracket", () => {
       'array[1][title]': 'sub-title2',
       'array[1][key]': 'key-title2',
     }
-    expect(toObject(obj)).toEqual(expected)
+    expect(toObject(obj, { separator: "bracket" })).toEqual(expected)
   })
 
 
@@ -116,7 +116,7 @@ describe("convert from data nested options:bracket", () => {
       "tags[0][value]": 10,
       "tags[0][display_name]": "ytrjtryhgmhgmhgmgmhgmhg",
     }
-    expect(toObject(obj)).toEqual(expected)
+    expect(toObject(obj, { separator: "bracket" })).toEqual(expected)
   })
 
   it('blob', () => {
@@ -135,7 +135,7 @@ describe("convert from data nested options:bracket", () => {
       'array[1]': 'element2',
       'file': obj.file,
     }
-    expect(toObject(obj)).toEqual(expected)
+    expect(toObject(obj, { separator: "bracket" })).toEqual(expected)
   })
 
   it('blob nested', () => {
@@ -159,7 +159,7 @@ describe("convert from data nested options:bracket", () => {
       'array[1][object]': 'icci',
       'array[1][sub][file]': b,
     }
-    expect(toObject(obj)).toEqual(expected)
+    expect(toObject(obj, { separator: "bracket" })).toEqual(expected)
   })
 
 })
