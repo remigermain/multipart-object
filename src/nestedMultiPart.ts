@@ -4,6 +4,10 @@ const defaultOptions: NestedDataOptions = {
     separator: "mixedDot"
 }
 
+function isObject(obj: any) {
+    return (obj instanceof Object && !(obj instanceof Blob || obj instanceof Date))
+}
+
 /*
     @data your objects data
     @options the options for generate data
@@ -27,27 +31,27 @@ export function toObject(data: object, options: NestedDataOptions = defaultOptio
     }
 
     function toNestedData(parentKey: string | undefined, value: any[string]): void {
-        Object.keys(value).forEach(key => {
+        // check last value is array
+        const isArray = Array.isArray(value)
+        const keys = Object.keys(value)
+
+        if ((isArray && value.length === 0) || (isObject(value) && keys.length === 0)) {
+            const subParentKey = addSeparatorKey(parentKey, "", isArray)
+            nestedData[subParentKey] = null
+            return
+        }
+        keys.forEach(key => {
 
             const val = value[key]
-
-            // check last value is array
-            const isArray = value instanceof Array
+            const subParentKey = addSeparatorKey(parentKey, key, isArray)
 
             // check if the value of objects is another objects
-            if (val instanceof Array ||
-                (val instanceof Object && !(val instanceof Blob || val instanceof Date))) {
-
-                toNestedData(addSeparatorKey(parentKey, key, isArray), val)
-
+            if (Array.isArray(val) || isObject(val)) {
+                toNestedData(subParentKey, val)
             } else {
-
                 // assign value when you are in last key
-                const parent_key = addSeparatorKey(parentKey, key, isArray)
-                nestedData[parent_key] = val
-
+                nestedData[subParentKey] = val
             }
-
         })
     }
 
@@ -61,8 +65,7 @@ export function toFormData(data: object, options: NestedDataOptions = defaultOpt
     const nestedData = toObject(data, options)
     const form = new FormData()
 
-    Object.keys(nestedData).forEach(key => {
-        let value = nestedData[key]
+    Object.entries(nestedData).forEach(([key, value]) => {
         // convert number, boolean, date or any value to string
         if (!(value instanceof Blob)) {
             value = String(value)

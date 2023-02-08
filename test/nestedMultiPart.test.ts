@@ -460,5 +460,37 @@ describe('mixed dot separator', () => {
     }
     expect(toObject(obj, { separator: "mixed" })).toEqual(expected)
   })
+
+  it("add empty array", () => {
+    const obj = {
+      "title": "titleContent",
+      "empty": {
+        "array": [],
+        "des": "description"
+      }
+    }
+    const expected = {
+      "title": "titleContent",
+      "empty.array[]": null,
+      "empty.des": "description",
+    }
+    expect(toObject(obj)).toEqual(expected)
+  })
+  it("add empty obj", () => {
+    const obj = {
+      "title": "titleContent",
+      "empty": {
+        "obj": {},
+        "des": "description"
+      }
+    }
+    const expected = {
+      "title": "titleContent",
+      "empty.obj.": null,
+      "empty.des": "description",
+    }
+    expect(toObject(obj)).toEqual(expected)
+  })
+
 })
 
