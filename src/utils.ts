@@ -23,5 +23,5 @@ export type NestedElement = { [key: string]: any } | [[index: number]]
 */
 
 export interface NestedMultiPartData {
-    [key: string]: string | boolean | number | Date | Blob
+    [key: string]: string | boolean | number | Date | Blob | null
 }
