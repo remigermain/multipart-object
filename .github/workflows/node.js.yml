@@ -5,12 +5,11 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -19,14 +18,14 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
-    - uses: borales/actions-yarn@v2.3.0
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: yarn install
-    - run: yarn build
-    - run: yarn lint
-    - run: yarn test
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+      - uses: borales/actions-yarn@v4.2.0
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - run: yarn install
+      - run: yarn build
+      - run: yarn lint
+      - run: yarn test
