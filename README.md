@@ -1,6 +1,8 @@
 # Multipart-object
 [![CI](https://github.com/remigermain/multipart-object/actions/workflows/node.js.yml/badge.svg)](https://github.com/remigermain/multipart-object/actions/workflows/node.js.yml)
 [![build](https://img.shields.io/npm/v/multipart-object)](https://www.npmjs.com/package/multipart-object)
+![NPM Downloads](https://img.shields.io/npm/dm/multipart-object)
+
 
 library to convert a classic object to a nested object, for send nested data in multipart http request.
 A parser for nodejs is provided.
